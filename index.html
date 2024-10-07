@@ -3,55 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Science Portfolio</title>
-    <link rel="stylesheet" href="index.css">
-    <script src="https://kit.fontawesome.com/b38f5a2895.js" crossorigin="anonymous"></script>
+    <title>Image Track Example</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Cameron's Data Science Portfolio</h1>
-            <p>Showcasing my projects and experience in data science and machine learning</p>
-        </div>
-    </section>
+    <nav>
+        <a href="#projects">Projects</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
-    <!-- Projects Section -->
-    <section class="projects">
-        <h2>Featured Projects</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <img src="project1.png" alt="Project 1">
-                <h3>Project 1: Predictive Modeling</h3>
-                <p>Using machine learning to predict customer churn.</p>
-                <a href="project1.html" class="btn">View Project</a>
-            </div>
-            <div class="project-card">
-                <img src="project2.png" alt="Project 2">
-                <h3>Project 2: Data Visualization</h3>
-                <p>Interactive visualizations for financial analysis.</p>
-                <a href="project2.html" class="btn">View Project</a>
-            </div>
-            <!-- Add more projects similarly -->
-        </div>
-    </section>
 
-    <!-- Work Experience Section -->
-    <section class="experience">
-        <h2>Work Experience</h2>
-        <div class="experience-content">
-            <p><strong>Data Science Intern at XYZ Corp</strong></p>
-            <p>Developed predictive models to reduce customer churn by 15% using Python and scikit-learn.</p>
-            
-            <p><strong>Research Assistant at University of Utah</strong></p>
-            <p>Analyzed genomic datasets using R and performed statistical analyses for biology projects.</p>
-        </div>
-    </section>
+    <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+        <img class="image" src="images/brain.png" draggable="false" />
+        <img class="image" src="images/mayan.png" draggable="false" />
+        <img class="image" src="images/2023symposium.jpg" draggable="false" />
+        <img class="image" src="images/money.png" draggable="false" />
+        <img class="image" src="images/anime.png" draggable="false" />
+        <img class="image" src="images/avalanche.png" draggable="false" />
+        <img class="image" src="images/jobs.png" draggable="false" />
+    </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Cameron's Data Science Portfolio</p>
-        <a href="about.html">About Me</a>
-    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>
