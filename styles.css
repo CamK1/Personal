@@ -1,0 +1,56 @@
+/* General Body Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Hexagonal Belt Styles */
+.hex-belt {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #2c3e50;
+}
+
+.hexagon {
+    width: 150px;
+    height: 86.6px;
+    background-color: transparent;
+    position: relative;
+    margin: 10px;
+}
+
+.hexagon-inset {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hexagon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1); /* Slight zoom to fill the hexagon */
+    transition: transform 0.3s ease-in-out;
+}
+
+.hexagon img:hover {
+    transform: scale(1.2); /* Zoom effect on hover */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .hexagon {
+        width: 120px;
+        height: 69px;
+    }
+}
