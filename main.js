@@ -2,8 +2,10 @@ const track = document.getElementById("image-track");
 let isDragging = false;
 let dragDistance = 0;
 let openedImage = null;
+let isImageOpen = false; // New flag to check if an image is open
 
 const handleOnDown = (e) => {
+    if (isImageOpen) return; // Prevent dragging if an image is open
     track.dataset.mouseDownAt = e.clientX;
     isDragging = true;
     dragDistance = 0; // Reset drag distance
@@ -11,10 +13,8 @@ const handleOnDown = (e) => {
 
 const handleOnUp = (e) => {
     if (!isDragging) return;
-
     isDragging = false;
 
-    // Check if the drag distance is minimal to treat it as a click
     if (Math.abs(dragDistance) < 5) {
         const targetImage = document.elementFromPoint(e.clientX, e.clientY);
         if (targetImage && targetImage.classList.contains('image')) {
@@ -28,6 +28,7 @@ const handleOnUp = (e) => {
 
 const handleOnMove = (e) => {
     if (!isDragging) return;
+    if (isImageOpen) return; // Prevent moving if an image is open
 
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX;
     const maxDelta = window.innerWidth / 2;
@@ -59,76 +60,63 @@ const handleOnMove = (e) => {
 };
 
 const openFullscreen = (element) => {
-    // Create a clone of the clicked image
+    isImageOpen = true; // Set the flag when an image is opened
+
     const fullPageImage = element.cloneNode();
     fullPageImage.classList.add('fullscreen-image');
 
-    // Set the initial style of the cloned image to match the clicked image
     fullPageImage.style.position = 'fixed';
-    fullPageImage.style.top = '50%'; // Start at center
-    fullPageImage.style.left = '50%'; // Start at center
-    fullPageImage.style.transform = 'translate(-50%, -50%)'; // Center the image
-    fullPageImage.style.width = 'auto'; // Width will be adjusted
-    fullPageImage.style.height = 'auto'; // Height will be adjusted
-    fullPageImage.style.maxWidth = '100%'; // Constrain to viewport
-    fullPageImage.style.maxHeight = '100%'; // Constrain to viewport
-    fullPageImage.style.zIndex = '9999'; // Ensure it's above other elements
-    fullPageImage.style.transition = 'transform 0.5s ease, opacity 0.5s ease'; // For the grow effect
-    fullPageImage.style.opacity = '0'; // Start hidden
+    fullPageImage.style.top = '50%'; // Align to the top
+    fullPageImage.style.left = '50%'; // Align to the left
+    fullPageImage.style.width = '100%'; // Set width to 100%
+    fullPageImage.style.height = '100%'; // Set height to 100%
+    fullPageImage.style.objectFit = 'cover'; // Ensure the image covers the entire area
+    fullPageImage.style.zIndex = '9999';
+    fullPageImage.style.transition = 'opacity 0.5s ease'; // Remove transform transition
+    fullPageImage.style.opacity = '0';
 
-    // Append the image to the body
     document.body.appendChild(fullPageImage);
+    fullPageImage.offsetWidth; // Trigger reflow
 
-    // Trigger reflow to restart animation
-    fullPageImage.offsetWidth; // This line forces a reflow
-
-    // After a short delay, set the scale to cover the viewport
     requestAnimationFrame(() => {
-        fullPageImage.style.opacity = '1'; // Fade in
-        fullPageImage.style.transform = 'translate(-50%, -50%) scale(1.5)'; // Scale up
+        fullPageImage.style.opacity = '1'; // Fade in effect
     });
 
-    // Create exit button
     const exitButton = document.createElement('button');
     exitButton.textContent = 'Close';
-    exitButton.style.position = 'fixed'; // Fixed position
-    exitButton.style.top = '20px'; // Position at the top
-    exitButton.style.right = '20px'; // Position at the right
+    exitButton.style.position = 'fixed';
+    exitButton.style.top = '20px';
+    exitButton.style.right = '20px';
     exitButton.style.padding = '10px 20px';
     exitButton.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
     exitButton.style.border = 'none';
     exitButton.style.cursor = 'pointer';
-    exitButton.style.zIndex = '10000'; // Ensure it's above the fullscreen image
+    exitButton.style.zIndex = '10000';
 
-    // Set the onclick event for closing
     exitButton.onclick = () => {
         closeFullscreen(fullPageImage, exitButton);
     };
 
-    // Append exit button to body
     document.body.appendChild(exitButton);
 };
 
-// Function to close the fullscreen image
-const closeFullscreen = (fullPageImage, exitButton) => {
-    // Animate the image back to its original size and position
-    fullPageImage.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-    fullPageImage.style.transform = 'translate(-50%, -50%) scale(0)'; // Scale down
-    fullPageImage.style.opacity = '0'; // Fade out
 
-    // Wait for the transition to finish before removing the elements
+const closeFullscreen = (fullPageImage, exitButton) => {
+    isImageOpen = false; // Reset the flag when the image is closed
+
+    fullPageImage.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+    fullPageImage.style.transform = 'translate(-50%, -50%) scale(0)';
+    fullPageImage.style.opacity = '0';
+
     fullPageImage.addEventListener('transitionend', () => {
         fullPageImage.remove();
-        exitButton.remove(); // Remove the exit button
+        exitButton.remove();
     });
 };
 
-// Event listeners for mouse and touch events
 window.onmousedown = (e) => handleOnDown(e);
 window.ontouchstart = (e) => handleOnDown(e.touches[0]);
-
 window.onmouseup = (e) => handleOnUp(e);
 window.ontouchend = (e) => handleOnUp(e.touches[0]);
-
 window.onmousemove = (e) => handleOnMove(e);
 window.ontouchmove = (e) => handleOnMove(e.touches[0]);
