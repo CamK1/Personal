@@ -59,21 +59,22 @@ const handleOnMove = (e) => {
 };
 
 const openFullscreen = (element) => {
-    // Store the opened image for later reference
-    openedImage = element.src;
-
     // Create a clone of the clicked image
     const fullPageImage = element.cloneNode();
     fullPageImage.classList.add('fullscreen-image');
 
     // Set the initial style of the cloned image to match the clicked image
     fullPageImage.style.position = 'fixed';
-    fullPageImage.style.top = `${element.getBoundingClientRect().top + window.scrollY}px`;
-    fullPageImage.style.left = `${element.getBoundingClientRect().left}px`;
-    fullPageImage.style.width = `${element.offsetWidth}px`;
-    fullPageImage.style.height = `${element.offsetHeight}px`;
+    fullPageImage.style.top = '50%'; // Start at center
+    fullPageImage.style.left = '50%'; // Start at center
+    fullPageImage.style.transform = 'translate(-50%, -50%)'; // Center the image
+    fullPageImage.style.width = 'auto'; // Width will be adjusted
+    fullPageImage.style.height = 'auto'; // Height will be adjusted
+    fullPageImage.style.maxWidth = '100%'; // Constrain to viewport
+    fullPageImage.style.maxHeight = '100%'; // Constrain to viewport
     fullPageImage.style.zIndex = '9999'; // Ensure it's above other elements
-    fullPageImage.style.transition = 'none'; // No transition initially to avoid flicker
+    fullPageImage.style.transition = 'transform 0.5s ease, opacity 0.5s ease'; // For the grow effect
+    fullPageImage.style.opacity = '0'; // Start hidden
 
     // Append the image to the body
     document.body.appendChild(fullPageImage);
@@ -81,12 +82,15 @@ const openFullscreen = (element) => {
     // Trigger reflow to restart animation
     fullPageImage.offsetWidth; // This line forces a reflow
 
-    // Set the animation class to start the grow effect
-    fullPageImage.classList.add('grow');
+    // After a short delay, set the scale to cover the viewport
+    requestAnimationFrame(() => {
+        fullPageImage.style.opacity = '1'; // Fade in
+        fullPageImage.style.transform = 'translate(-50%, -50%) scale(1.5)'; // Scale up
+    });
 
     // Create exit button
     const exitButton = document.createElement('button');
-    exitButton.textContent = 'Close Image';
+    exitButton.textContent = 'Close';
     exitButton.style.position = 'fixed'; // Fixed position
     exitButton.style.top = '20px'; // Position at the top
     exitButton.style.right = '20px'; // Position at the right
@@ -98,40 +102,25 @@ const openFullscreen = (element) => {
 
     // Set the onclick event for closing
     exitButton.onclick = () => {
-        closeFullscreen(fullPageImage, exitButton, element);
+        closeFullscreen(fullPageImage, exitButton);
     };
 
     // Append exit button to body
     document.body.appendChild(exitButton);
-
-    // Trigger reflow to apply transitions after appending the image
-    requestAnimationFrame(() => {
-        fullPageImage.style.transition = 'width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease';
-        fullPageImage.style.top = '0'; // Animate to cover the viewport
-        fullPageImage.style.left = '0';
-        fullPageImage.style.width = '100vw'; // Expand to full width
-        fullPageImage.style.height = '100vh'; // Expand to full height
-    });
 };
 
 // Function to close the fullscreen image
-const closeFullscreen = (fullPageImage, exitButton, originalImage) => {
-    // Animate the image back to its original position
-    fullPageImage.style.transition = 'width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease';
-    
-    fullPageImage.style.top = `${originalImage.getBoundingClientRect().top + window.scrollY}px`;
-    fullPageImage.style.left = `${originalImage.getBoundingClientRect().left}px`;
-    fullPageImage.style.width = `${originalImage.offsetWidth}px`;
-    fullPageImage.style.height = `${originalImage.offsetHeight}px`;
+const closeFullscreen = (fullPageImage, exitButton) => {
+    // Animate the image back to its original size and position
+    fullPageImage.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+    fullPageImage.style.transform = 'translate(-50%, -50%) scale(0)'; // Scale down
+    fullPageImage.style.opacity = '0'; // Fade out
 
     // Wait for the transition to finish before removing the elements
     fullPageImage.addEventListener('transitionend', () => {
         fullPageImage.remove();
-        if (exitButton) exitButton.remove(); // Remove the exit button
+        exitButton.remove(); // Remove the exit button
     });
-
-    // Reset body overflow
-    document.body.style.overflow = 'auto'; // Re-enable scrolling
 };
 
 // Event listeners for mouse and touch events
