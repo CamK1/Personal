@@ -58,15 +58,22 @@ const handleOnMove = (e) => {
     }
 };
 
-// Function to open the image in full page
 const openFullscreen = (element) => {
     // Store the opened image for later reference
     openedImage = element.src;
 
-    // Create an image element for the full-page display
-    const fullPageImage = document.createElement('img');
-    fullPageImage.src = openedImage;
+    // Create a clone of the clicked image
+    const fullPageImage = element.cloneNode();
     fullPageImage.classList.add('fullscreen-image');
+
+    // Set the initial style of the cloned image to match the clicked image
+    fullPageImage.style.position = 'fixed';
+    fullPageImage.style.top = `${element.getBoundingClientRect().top + window.scrollY}px`;
+    fullPageImage.style.left = `${element.getBoundingClientRect().left}px`;
+    fullPageImage.style.width = `${element.offsetWidth}px`;
+    fullPageImage.style.height = `${element.offsetHeight}px`;
+    fullPageImage.style.zIndex = '9999'; // Ensure it's above other elements
+    fullPageImage.style.transition = 'none'; // No transition initially to avoid flicker
 
     // Append the image to the body
     document.body.appendChild(fullPageImage);
@@ -80,40 +87,51 @@ const openFullscreen = (element) => {
     // Create exit button
     const exitButton = document.createElement('button');
     exitButton.textContent = 'Close Image';
-    exitButton.style.position = 'absolute';
-    exitButton.style.top = '20px';
-    exitButton.style.right = '20px';
+    exitButton.style.position = 'fixed'; // Fixed position
+    exitButton.style.top = '20px'; // Position at the top
+    exitButton.style.right = '20px'; // Position at the right
     exitButton.style.padding = '10px 20px';
     exitButton.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
     exitButton.style.border = 'none';
     exitButton.style.cursor = 'pointer';
-    exitButton.style.zIndex = '1000';
+    exitButton.style.zIndex = '10000'; // Ensure it's above the fullscreen image
 
-    exitButton.onclick = closeFullscreen;
+    // Set the onclick event for closing
+    exitButton.onclick = () => {
+        closeFullscreen(fullPageImage, exitButton, element);
+    };
 
     // Append exit button to body
     document.body.appendChild(exitButton);
+
+    // Trigger reflow to apply transitions after appending the image
+    requestAnimationFrame(() => {
+        fullPageImage.style.transition = 'width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease';
+        fullPageImage.style.top = '0'; // Animate to cover the viewport
+        fullPageImage.style.left = '0';
+        fullPageImage.style.width = '100vw'; // Expand to full width
+        fullPageImage.style.height = '100vh'; // Expand to full height
+    });
 };
 
 // Function to close the fullscreen image
-const closeFullscreen = () => {
-    // Remove the full page image
-    const fullPageImage = document.querySelector('.fullscreen-image');
-    if (fullPageImage) {
-        fullPageImage.classList.remove('grow'); // Remove the grow class
-        fullPageImage.addEventListener('transitionend', () => {
-            fullPageImage.remove();
-        });
-    }
+const closeFullscreen = (fullPageImage, exitButton, originalImage) => {
+    // Animate the image back to its original position
+    fullPageImage.style.transition = 'width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease';
+    
+    fullPageImage.style.top = `${originalImage.getBoundingClientRect().top + window.scrollY}px`;
+    fullPageImage.style.left = `${originalImage.getBoundingClientRect().left}px`;
+    fullPageImage.style.width = `${originalImage.offsetWidth}px`;
+    fullPageImage.style.height = `${originalImage.offsetHeight}px`;
+
+    // Wait for the transition to finish before removing the elements
+    fullPageImage.addEventListener('transitionend', () => {
+        fullPageImage.remove();
+        if (exitButton) exitButton.remove(); // Remove the exit button
+    });
 
     // Reset body overflow
     document.body.style.overflow = 'auto'; // Re-enable scrolling
-
-    // Remove exit button
-    const exitButton = document.querySelector('button');
-    if (exitButton) {
-        exitButton.remove();
-    }
 };
 
 // Event listeners for mouse and touch events

@@ -101,20 +101,29 @@ body.menu-toggled > .meta-link > span {
     font-family: "Rubik", sans-serif;
     font-weight: 500;
 }
-
 .fullscreen-image {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    transform: translate(-50%, -50%);
-    transition: width 0.5s ease, height 0.5s ease;
-    z-index: 999; /* Ensure it's above other elements */
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0; /* Start hidden */
 }
 
 .fullscreen-image.grow {
-    width: 100vw; /* Take up the full width of the viewport */
-    height: 100vh; /* Take up the full height of the viewport */
+    opacity: 1; /* Fade in */
+    transform: scale(1); /* Full size */
+}
+
+.fullscreen-image.shrink {
+    opacity: 0; /* Fade out */
+    transform: scale(0.8); /* Slightly shrink before disappearing */
+}
+
+
+button {
+    border-radius: 6px; /* Rounded corners */
+    font-family: "Rubik", sans-serif;
+    font-size: 16px; /* Increase the font size */
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.6); /* Change on hover */
 }
 
