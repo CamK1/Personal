@@ -6,6 +6,7 @@ body {
     overflow: hidden; /* Prevent both vertical and horizontal scrolling */
 }
 
+
 /* Navigation Styles */
 nav {
     display: flex;

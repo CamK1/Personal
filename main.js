@@ -2,6 +2,7 @@ const track = document.getElementById("image-track");
 let isDragging = false;
 let dragDistance = 0;
 let openedImage = null;
+let isFullscreenOpen = false; // Track if an image is open in fullscreen
 
 const handleOnDown = (e) => {
     track.dataset.mouseDownAt = e.clientX;
@@ -59,6 +60,10 @@ const handleOnMove = (e) => {
 };
 
 const openFullscreen = (element) => {
+    if (isFullscreenOpen) return; // Prevent opening a new image if one is already open
+
+    isFullscreenOpen = true; // Set the flag to true
+
     // Store the opened image for later reference
     openedImage = element.src;
 
@@ -138,12 +143,14 @@ const closeFullscreen = (fullPageImage, exitButton, originalImage) => {
 
         // Re-enable pointer events on image track
         track.style.pointerEvents = 'auto';
+
+        // Reset the fullscreen flag
+        isFullscreenOpen = false; 
     });
 
     // Reset body overflow
     document.body.style.overflow = 'auto'; // Re-enable scrolling
 };
-
 
 // Event listeners for mouse and touch events
 window.onmousedown = (e) => handleOnDown(e);
@@ -155,9 +162,7 @@ window.ontouchend = (e) => handleOnUp(e.touches[0]);
 window.onmousemove = (e) => handleOnMove(e);
 window.ontouchmove = (e) => handleOnMove(e.touches[0]);
 
-
 // main.js
-
 const navLinks = document.querySelectorAll('nav a');
 const images = document.querySelectorAll('#image-track .image');
 
@@ -176,4 +181,3 @@ navLinks.forEach((link, index) => {
         images[index].style.backgroundColor = 'red'; // Set the active background color
     });
 });
-
