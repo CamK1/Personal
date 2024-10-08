@@ -112,27 +112,38 @@ const openFullscreen = (element) => {
         fullPageImage.style.width = '100vw'; // Expand to full width
         fullPageImage.style.height = '100vh'; // Expand to full height
     });
+
+    // Disable pointer events on image track
+    track.style.pointerEvents = 'none';
 };
 
-// Function to close the fullscreen image
 const closeFullscreen = (fullPageImage, exitButton, originalImage) => {
-    // Animate the image back to its original position
-    fullPageImage.style.transition = 'width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease';
-    
-    fullPageImage.style.top = `${originalImage.getBoundingClientRect().top + window.scrollY}px`;
-    fullPageImage.style.left = `${originalImage.getBoundingClientRect().left}px`;
-    fullPageImage.style.width = `${originalImage.offsetWidth}px`;
-    fullPageImage.style.height = `${originalImage.offsetHeight}px`;
+    // Animate the image back to its original position and size
+    fullPageImage.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+    fullPageImage.style.opacity = '0'; // Fade out
+
+    const originalRect = originalImage.getBoundingClientRect();
+    const bodyRect = document.body.getBoundingClientRect();
+
+    // Calculate the scale and position
+    const scaleX = originalRect.width / bodyRect.width; // Scale for width
+    const scaleY = originalRect.height / bodyRect.height; // Scale for height
+
+    fullPageImage.style.transform = `translate(${originalRect.left - bodyRect.left}px, ${originalRect.top - bodyRect.top}px) scale(${scaleX}, ${scaleY})`;
 
     // Wait for the transition to finish before removing the elements
     fullPageImage.addEventListener('transitionend', () => {
         fullPageImage.remove();
         if (exitButton) exitButton.remove(); // Remove the exit button
+
+        // Re-enable pointer events on image track
+        track.style.pointerEvents = 'auto';
     });
 
     // Reset body overflow
     document.body.style.overflow = 'auto'; // Re-enable scrolling
 };
+
 
 // Event listeners for mouse and touch events
 window.onmousedown = (e) => handleOnDown(e);
@@ -143,3 +154,26 @@ window.ontouchend = (e) => handleOnUp(e.touches[0]);
 
 window.onmousemove = (e) => handleOnMove(e);
 window.ontouchmove = (e) => handleOnMove(e.touches[0]);
+
+
+// main.js
+
+const navLinks = document.querySelectorAll('nav a');
+const images = document.querySelectorAll('#image-track .image');
+
+navLinks.forEach((link, index) => {
+    link.addEventListener('click', () => {
+        // Remove active class from all links and images
+        navLinks.forEach(nav => nav.classList.remove('navActive'));
+        images.forEach(image => {
+            image.classList.remove('active');
+            image.style.backgroundColor = ''; // Reset the background color
+        });
+
+        // Add active class to the clicked link and corresponding image
+        link.classList.add('navActive');
+        images[index].classList.add('active');
+        images[index].style.backgroundColor = 'red'; // Set the active background color
+    });
+});
+
