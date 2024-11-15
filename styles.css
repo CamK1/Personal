@@ -1,73 +1,72 @@
+/* Base body styling with smooth, subtle radial gradient */
 body {
-    height: 100vh;
-    width: 100vw;
-    background-color: #141414;
-    margin: 0;
-    overflow: hidden; /* Prevent both vertical and horizontal scrolling */
-}
-
-
-/* Navigation Styles */
-nav {
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at 50% -10%, #2f4f2f 50%, #355E3B 100%);
+    min-height: 100vh;
     display: flex;
+    align-items: center;
     justify-content: center;
-    background-color: rgba(72, 72, 72, 0.959);
-    padding: 10px 20px;
-    position: absolute;
-    top: 10%; /* Adjust the top position as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 6px;
-    z-index: 5; /* Ensure the nav bar is above other elements */
+    opacity: 1;
+    transition: background 1.5s ease, opacity 1.5s ease;
+  }
+  
+/* Fade-in effect for page load */
+body.fade-in {
+opacity: 0;
+background: #132A13;
+animation: fadeInEffect 1.5s forwards;
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px; /* Spacing between links */
-    font-family: "Rubik", sans-serif;
-    font-weight: 500;
-    transition: color 0.3s;
+@keyframes fadeInEffect {
+from {
+    opacity: 0;
+    background: #132A13;
+}
+to {
+    opacity: 1;
+    background: radial-gradient(circle at 50% -10%, #2f4f2f 50%, #355E3B 100%);
+}
 }
 
-nav a:hover {
-    color: rgba(255, 255, 255, 0.8); /* Hover effect */
+/* Fade-out effect for navigating away */
+body.fade-out {
+opacity: 0;
+background: #132A13;
 }
 
-/* Active Navigation Style */
-.navActive {
-    color: red; /* Change text color to red for the active link */
-    font-weight: bold; /* Make the active link bold */
+.toggle-container {
+position: absolute;
+top: 20px;
+left: 50%;
+transform: translateX(-50%);
 }
 
-#image-track {
-    display: flex;
-    gap: 4vmin;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(0%, -50%);
-    user-select: none; /* Prevent image highlighting */
-    pointer-events: auto; /* Allow clicks on images when not in fullscreen */
-    overflow: hidden; /* Prevent horizontal scrolling */
+#toggleButton {
+padding: 10px 20px;
+font-size: 16px;
+background: #ffffff;
+border: 2px solid #132A13;
+color: #132A13;
+cursor: pointer;
+transition: all 0.3s ease;ww
 }
 
-#image-track > .image {
-    width: 40vmin;
-    height: 56vmin;
-    object-fit: cover;
-    object-position: 100% center;
-    overflow: hidden; 
+#toggleButton:hover {
+background: #132A13;
+color: #ffffff;
 }
 
-/* Fullscreen image style */
-.fullscreen-image {
-    transition: transform 0.5s ease;
+.content {
+text-align: center;
+color: #132A13;
+animation: fadeIn 2s ease;
 }
 
-.grow {
-    transition: width 0.5s ease, height 0.5s ease;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden; 
+@keyframes fadeIn {
+from {
+    opacity: 0;
+}
+to {
+    opacity: 1;
+}
 }
