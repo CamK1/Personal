@@ -1,72 +1,146 @@
-/* Base body styling with smooth, subtle radial gradient */
+/* Colors */
+:root {
+    --primary-color: #2c3e50; /* Dark navy */
+    --secondary-color: #e74c3c; /* Vibrant red */
+    --highlight-color: #ecf0f1; /* Light gray */
+}
+
+/* General Reset */
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: radial-gradient(circle at 50% -10%, #2f4f2f 50%, #355E3B 100%);
-    min-height: 100vh;
+    color: var(--primary-color);
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--highlight-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px; /* Added padding to prevent text from touching edges */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    box-sizing: border-box; /* Ensures padding doesn't add extra width */
+}
+
+/* Logo Section */
+
+.logo {
+    display: flex;
+    flex-direction: column; /* Adjusts layout for single-line name */
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 1.5em;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+.logo p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    white-space: nowrap; /* Ensures "Data Scientist" stays on one line */
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+
+.nav-center {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-grow: 1;
+}
+
+.nav-oval {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    background-color: var(--highlight-color);
+    border-radius: 50px;
+    padding: 5px 20px;
+    height: 40px;
+    align-items: center;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1em;
+    padding: 5px 15px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.nav-button:hover {
+    color: var(--secondary-color);
+}
+
+.highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background-color: var(--secondary-color);
+    border-radius: 50px;
+    z-index: 0;
+    transition: transform 0.3s ease;
+}
+
+.nav-button:nth-child(1):focus ~ .highlight {
+    transform: translateX(0);
+}
+
+.nav-button:nth-child(2):focus ~ .highlight {
+    transform: translateX(100%);
+}
+
+/* LinkedIn and Resume Buttons */
+.nav-right {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-link {
+    color: var(--highlight-color);
+    text-decoration: none;
+    padding: 5px 10px;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--secondary-color);
+}
+
+/* Main Sections */
+main {
+    margin-top: 80px; /* To offset fixed header */
+}
+
+section {
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    transition: background 1.5s ease, opacity 1.5s ease;
-  }
-  
-/* Fade-in effect for page load */
-body.fade-in {
-opacity: 0;
-background: #132A13;
-animation: fadeInEffect 1.5s forwards;
-}
-
-@keyframes fadeInEffect {
-from {
-    opacity: 0;
-    background: #132A13;
-}
-to {
-    opacity: 1;
-    background: radial-gradient(circle at 50% -10%, #2f4f2f 50%, #355E3B 100%);
-}
-}
-
-/* Fade-out effect for navigating away */
-body.fade-out {
-opacity: 0;
-background: #132A13;
-}
-
-.toggle-container {
-position: absolute;
-top: 20px;
-left: 50%;
-transform: translateX(-50%);
-}
-
-#toggleButton {
-padding: 10px 20px;
-font-size: 16px;
-background: #ffffff;
-border: 2px solid #132A13;
-color: #132A13;
-cursor: pointer;
-transition: all 0.3s ease;ww
-}
-
-#toggleButton:hover {
-background: #132A13;
-color: #ffffff;
-}
-
-.content {
-text-align: center;
-color: #132A13;
-animation: fadeIn 2s ease;
-}
-
-@keyframes fadeIn {
-from {
-    opacity: 0;
-}
-to {
-    opacity: 1;
-}
+    font-size: 2em;
+    color: var(--highlight-color);
+    background-color: var(--primary-color);
+    border-bottom: 2px solid var(--secondary-color);
 }
